@@ -12,8 +12,10 @@ public class LevelManager : MonoBehaviour // GenericSingleton<GameManager>
     [SerializeField] TMP_Text ScoreText;
     [SerializeField] GameObject gameOverScreen;
     [SerializeField] GameObject levelCompletedScreen;
+    [SerializeField] int pointScore;
     private int score = 0;
     private Coroutine destructionCoroutine;
+    string highScore_PP = "highScore";
 
     protected void Start()
     {
@@ -30,7 +32,8 @@ public class LevelManager : MonoBehaviour // GenericSingleton<GameManager>
 
     public void updateScore(int kill)
     {
-        score++;
+        score += pointScore;
+        if (PlayerPrefs.GetInt(highScore_PP) < score) PlayerPrefs.SetInt(highScore_PP, score);
         ScoreText.text = "Score : " + score;
     }
     public void destroyWorld()

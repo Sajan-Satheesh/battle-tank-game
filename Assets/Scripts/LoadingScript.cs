@@ -9,11 +9,6 @@ public class LoadingScript : MonoBehaviour
     [SerializeField] private Slider loader;
     [SerializeField] private TMP_Text loadingPercent;
     float loadingProgress = 0;
-    private void Awake()
-    {
-        loader.gameObject.SetActive(false);
-    }
-
     public void playLevel()
     {
         Debug.Log(Application.backgroundLoadingPriority);
