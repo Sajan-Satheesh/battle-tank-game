@@ -25,7 +25,7 @@ public class AcheivementService : GenericSingleton<AcheivementService>
         base.Start();
         BulletService.Instance.bulletfire += bulletAcheivementCalculator;
         TankService.Instance.distanceMilestoneCover += distanceAcheivementCalculator;
-        TankService.Instance.killCounter += killAcheivementCalculator;
+        TankService.Instance.onKilled += killAcheivementCalculator;
     }
 
     public void bulletAcheivementCalculator(int count)

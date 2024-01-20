@@ -14,47 +14,45 @@ public class EnemyTankController : TankController
    
     public override void UpdateTank()
     {
-        tankModel.currentState.onTick();
+        tankModel.currentState.OnTick();
     }
 
     public override void UpdateCollisionControls()
     {
-        tankModel.currentState.onCollision();
+        tankModel.currentState.OnCollision();
     }
 
     public override void DestroyTank()
     {
-        base.DestroyTank();
-        if (TankService.Instance.playerTankController!=null) TankService.Instance.killIncrementer();
+        if (TankService.Instance.playerTankController != null && !tankModel.died)
+        {
+            TankService.Instance.killIncrementer();
+            TankService.Instance.EnemyTanksControllers.Remove(this);
+            if (TankService.Instance.EnemyTanksControllers.Count == 0)
+            {
+                TankService.Instance.onLevelCleared?.Invoke();
+            }
+        }
+        base.DestroyTank(); 
     }
 
-    public void changeState(TankState _tanksState)
+    public void ChangeState(TankState _tanksState)
     {
-        if(_tanksState != null)
-        {
-            tankModel.currentState = _tanksState;
-            tankModel.currentState.onStateEnter();
-        }
-        else
-        {
-            tankModel.currentState = _tanksState;
-            tankModel.currentState.onStateEnter();
-
-        }
+        tankModel.currentState.OnStateExit();
+        tankModel.currentState = _tanksState;
+        tankModel.currentState.OnStateEnter();
     }
-    public void moveForward()
+    public void MoveForward()
     {
         tankView.gameObject.transform.position += tankView.gameObject.transform.forward  * tankModel.speed * Time.deltaTime;
     }
-    public void shiftDirectionSlow ()
+    public void ShiftDirectionSlow ()
     {
-        //Quaternion rotateTowards = Quaternion.LookRotation(-1 * tankView.gameObject.transform.forward, Vector3.up);
-        //Quaternion newQ = Quaternion.Euler(0, 90, 0);
         Quaternion newQ = Quaternion.Euler(tankView.gameObject.transform.rotation.eulerAngles+new Vector3(0,10,0));
         tankView.gameObject.transform.rotation = Quaternion.Lerp(tankView.gameObject.transform.rotation, newQ, 0.1f);
     }
 
-    public float distanceBtwPlayer()
+    public float DistanceBtwPlayer()
     {
         TankController player = TankService.Instance.playerTankController;
         if (player != null)
@@ -67,7 +65,7 @@ public class EnemyTankController : TankController
         
     }
 
-    public void throwRay()
+    public void ThrowRay()
     {
         Ray ememyRay = new Ray(tankView.gameObject.transform.position,tankView.gameObject.transform.forward);
         RaycastHit raycastHit = new RaycastHit();
@@ -75,27 +73,46 @@ public class EnemyTankController : TankController
             if (raycastHit.distance < 3f)
             {
                 tankModel.speed = 0;
-                shiftDirectionSlow();
+                ShiftDirectionSlow();
             }
             else tankModel.speed = tankModel.defaultSpeed;
         }
     }
 
-    public void lookAtPlayer()
+    public void LookAtPlayer()
     {
         TankController player = TankService.Instance.playerTankController;
         if (player != null)
         {
-            /*float angleToLook = Vector3.Angle(tankView.gameObject.transform.forward.normalized, (tankView.gameObject.transform.position - player.tankView.gameObject.transform.position).normalized);
-            Quaternion lookingRotation = Quaternion.AngleAxis(360-angleToLook, Vector3.up);
-            tankView.gameObject.transform.rotation = Quaternion.Lerp(tankView.gameObject.transform.rotation, lookingRotation, 0.1f);*/
             tankView.gameObject.transform.LookAt(player.tankView.gameObject.transform.position);
         }
     }
 
-    public override void onBulletHit()
+    public void FireAfterCooldown()
     {
-        base.onBulletHit();
+        ToggleAutoFiring(true);
+        tankView.FireCoroutine(1f);
+    }
+
+    public void ToggleAutoFiring(bool _switch)
+    {
+        tankModel.firing = _switch;
+    }
+
+    public void StopFiring()
+    {
+        ToggleAutoFiring(false);
+        tankView.StopFiring();
+    }
+    public float GetRange()
+    {
+        if (TankService.Instance.playerTankController != null)
+        {
+            float shootAngle = Vector3.Angle(tankModel.shootertransform.forward, (TankService.Instance.playerTankController.tankView.transform.position - tankView.transform.position).normalized);
+            float range = (tankModel.bulletType.speed * tankModel.shootertransform.forward).magnitude + 2 * MathF.Sin(shootAngle) / Physics.gravity.magnitude;
+            return range;
+        }
+        return default;
 
     }
 

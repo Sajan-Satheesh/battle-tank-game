@@ -45,52 +45,49 @@ public class TankView : MonoBehaviour
         tankController.UpdateCollisionControls();
         if(collision.gameObject.TryGetComponent<BulletView>(out BulletView bullet))
         {
-            tankController.onBulletHit();
+            tankController.OnBulletHit();
         }
     }
 
-    public void startDestroyCoroutine(float seconds)
+    public void StartDestroyCoroutine(float seconds)
     {
         if(destroyThis!=null)
         {
             StopCoroutine(destroyThis);
             destroyThis = null;
         }
-        destroyThis = StartCoroutine(destroy(seconds));
+        destroyThis = StartCoroutine(Destroy(seconds));
     }
 
-    private IEnumerator destroy(float seconds)
+    private IEnumerator Destroy(float seconds)
     {
         //gameObject.GetComponent<MeshRenderer>().enabled = false;
         yield return new WaitForSeconds(seconds);
-        tankController.destroyTankDatas();
+        tankController.DestroyTankDatas();
         tankController = null;
         Destroy(gameObject);
 
     }
 
-    public void fireCoroutine(float seconds, bool _fire)
+    public void FireCoroutine(float seconds)
     {
-        if (firing != null)
-        {
-            Debug.Log("firing coroutine stoppped");
-            StopCoroutine(firing);
-            firing = null;
-        }
-        firing = StartCoroutine(fireEnumerator(seconds, _fire));
+        firing = StartCoroutine(FireEnumerator(seconds));
     }
-    private IEnumerator fireEnumerator(float seconds, bool fire)
+    private IEnumerator FireEnumerator(float seconds)
     {
-        while (fire)
+        while (tankController.tankModel.firing && !tankController.tankModel.died)
         {
-            tankController.Fire();
+            tankController?.Fire();
             yield return new WaitForSeconds(seconds);
         }
-        StopCoroutine(firing);
     }
     public void StopFiring()
     {
-        if (firing != null) StopCoroutine(firing);
+        if (firing != null)
+        {
+            StopCoroutine(firing);
+            firing = null;
+        }
     }
 
     

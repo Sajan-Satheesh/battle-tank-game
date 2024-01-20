@@ -50,7 +50,7 @@ namespace Complete
                 float damage = CalculateDamage (targetRigidbody.position);
 
                 // Deal this damage to the tank.
-                targetHealth.tankController.onBulletHit(); /// Wrong!!
+                targetHealth.tankController.OnBulletHit(); /// Wrong!!
             }
 
             // Unparent the particles from the shell.

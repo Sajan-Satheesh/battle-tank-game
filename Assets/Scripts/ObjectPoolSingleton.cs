@@ -2,12 +2,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [Serializable]
 public class ObjectPoolSingleton<T> : GenericSingleton<ObjectPoolSingleton<T>> where T: class
 {
-    [SerializeField] protected Queue<T> availableItems = new Queue<T>();
+    [SerializeField] protected List<T> availableItems = new List<T>();
     [SerializeField] protected List<T> inUseItems = new List<T>();
 
     #region public functions
@@ -17,17 +18,15 @@ public class ObjectPoolSingleton<T> : GenericSingleton<ObjectPoolSingleton<T>> w
         if (availableItems.Count < 1)
         {
             item = makeItem();
-            inUseItems.Add(item);
-            return item;
         }
         else
         {
-            item = availableItems.Dequeue();
-            inUseItems.Add(item);
-            return item;
+            item = availableItems.Last();
+            availableItems.Remove(item);
         }
+        inUseItems.Add(item);
+        return item;
     }
-
 
 
     public void retrieveItem( T _retreivedItem)
@@ -39,7 +38,7 @@ public class ObjectPoolSingleton<T> : GenericSingleton<ObjectPoolSingleton<T>> w
             if (item.Equals(_retreivedItem))
             {
                 Debug.Log("bullet returned");
-                availableItems.Enqueue(item);
+                availableItems.Add(item);
                 inUseItems.Remove(item);
                 break;
             }

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3626872980200354312}
   - component: {fileID: 3626872980200354319}
-  - component: {fileID: 3626872980200354318}
+  - component: {fileID: 959022149926171046}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -50,7 +50,8 @@ MonoBehaviour:
   childrenView: []
   ScoreText: {fileID: 0}
   gameOverScreen: {fileID: 0}
---- !u!114 &3626872980200354318
+  levelCompletedScreen: {fileID: 0}
+--- !u!114 &959022149926171046
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -59,8 +60,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 3626872980200354313}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 98b8e4fe419f94c438d43f234ffb336b, type: 3}
+  m_Script: {fileID: 11500000, guid: 35637742a69d31341b2ba20da4483dc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   loader: {fileID: 0}
-  loadingPer: {fileID: 0}
+  loadingPercent: {fileID: 0}

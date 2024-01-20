@@ -20,17 +20,6 @@ public class BulletService : GenericSingleton<BulletService>
     public void FireBullet(BulletType bulletType, TransformSet bulletTransform)
     {
         bulletPool.createBullet(bulletType,bulletTransform).onFire(bulletTransform);
-        ////////
-        /*if(bulletControllers.Count <= 0|| bulletControllers.Peek().bulletModel.fired == true)
-        {
-            createBullet(bulletType, bulletTransform);
-        }
-        else
-        {
-            BulletController firedBullet = bulletControllers.Dequeue();
-            bulletControllers.Enqueue(firedBullet);
-            firedBullet.onFire(bulletTransform);
-        }*/
         bulletsFired++;
         bulletfire?.Invoke(bulletsFired);
     }
@@ -41,7 +30,7 @@ public class BulletService : GenericSingleton<BulletService>
     }
     public BulletController createBullet(BulletType _bulletType, TransformSet _bulletTransform)
     {
-        BulletModel bulletModel = new BulletModel(_bulletType.speed, _bulletTransform);
+        BulletModel bulletModel = new BulletModel(_bulletType, _bulletTransform);
         BulletController bulletController = new BulletController(bulletModel, _bulletType.bulletView);
         return bulletController;
         //bulletControllers.Enqueue(bulletController);

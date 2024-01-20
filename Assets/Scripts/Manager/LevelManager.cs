@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -10,14 +11,21 @@ public class LevelManager : MonoBehaviour // GenericSingleton<GameManager>
     [SerializeField] Transform[] childrenView;
     [SerializeField] TMP_Text ScoreText;
     [SerializeField] GameObject gameOverScreen;
+    [SerializeField] GameObject levelCompletedScreen;
     private int score = 0;
     private Coroutine destructionCoroutine;
 
     protected void Start()
     {
         //base.Start();
-        TankService.Instance.killCounter += updateScore;
-        TankService.Instance.gameOver += onGameOver;
+        TankService.Instance.onKilled += updateScore;
+        TankService.Instance.onGameOver += onGameOver;
+        TankService.Instance.onLevelCleared += onLevelClear;
+    }
+
+    private void onLevelClear()
+    {
+        levelCompletedScreen.SetActive(true);
     }
 
     public void updateScore(int kill)

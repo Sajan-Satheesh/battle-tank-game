@@ -8,6 +8,10 @@ public class BulletView : MonoBehaviour, IgetController
     private BulletController bulletController;
     public Rigidbody bulletRb = new Rigidbody();
 
+    private void Update()
+    {
+        transform.forward= bulletRb.velocity.normalized;
+    }
     private void Start()
     {
         gameObject.GetComponent<MeshCollider>().convex = true;

@@ -13,36 +13,31 @@ public class InputController : MonoBehaviour
     [SerializeField] private Button Reverse;
     [SerializeField] private Button Shoot;
     bool accelerated;
-    bool stopped;
-    private PlayerTankController playerTank;
+    bool reversed;
 
     // Update is called once per frame
     private void Start()
     {
         Shoot.onClick.AddListener(shootBullet);
-        playerTank = TankService.Instance.playerTankController;
     }
     void Update()
     {
-        if(playerTank != null) {
+        if(RequestPlayerTank() != null) {
             accelerated = getButtonState(Accelerator);
-            stopped = getButtonState(Reverse);
+            reversed = getButtonState(Reverse);
             if (accelerated)
             {
-                playerTank.moveWithVelocity(Direction.front);
+                RequestPlayerTank()?.moveWithVelocity(Direction.front);
             }
-            else if (stopped)
+            else if (reversed)
             {
-                playerTank.moveWithVelocity(Direction.back);
+                RequestPlayerTank()?.moveWithVelocity(Direction.back);
             }
-            if (Input.GetKeyDown(KeyCode.X))
-            {
-                playerTank.DestroyTank();
-            }
-
             if (joystick.Direction.magnitude > 0)
             {
-                playerTank.RotateToDirection(joystick.Direction);
+                float rotationAngle = Vector3.Angle(Vector3.forward, Camera.main.transform.forward);
+                Vector3 rotatedVector = Quaternion.AngleAxis(rotationAngle, Vector3.up) * new Vector3(joystick.Direction.x, 0, joystick.Direction.y);
+                RequestPlayerTank()?.RotateToDirection(rotatedVector);
             }
         }
        
@@ -51,7 +46,15 @@ public class InputController : MonoBehaviour
     private void shootBullet()
     {
         //Debug.Log("bullet launched");
-        playerTank.Fire();
+        if(RequestPlayerTank() != null)
+        {
+            RequestPlayerTank()?.Fire();
+        }
+    }
+
+    private PlayerTankController RequestPlayerTank()
+    {
+        return TankService.Instance.playerTankController;
     }
 
     private bool getButtonState(Button button)

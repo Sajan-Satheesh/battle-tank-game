@@ -1,16 +1,47 @@
 using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class LoadingScript : MonoBehaviour
 {
+    [SerializeField] private Slider loader;
+    [SerializeField] private TMP_Text loadingPercent;
+    float loadingProgress = 0;
     private void Awake()
     {
-        this.gameObject.SetActive(false);
+        loader.gameObject.SetActive(false);
     }
 
-    public void ActivateObject()
+    public void playLevel()
     {
-        this.gameObject.SetActive(true);
+        Debug.Log(Application.backgroundLoadingPriority);
+        Application.backgroundLoadingPriority = ThreadPriority.High;
+        StartCoroutine(loadPlaylevel());
+    }
+
+    private IEnumerator loadPlaylevel()
+    {
+        AsyncOperation playLevelProgress = SceneManager.LoadSceneAsync(1);
+        while (!playLevelProgress.isDone)
+        {
+            loadingProgress = playLevelProgress.progress / 0.9f;
+            loader.value = loadingProgress;
+            loadingPercent.text = (loadingProgress * 100).ToString();
+            Debug.Log("Loading progress: " + loadingProgress);
+            yield return null;
+        }
+    }
+
+    public void loadMainMenu()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+    private void OnDestroy()
+    {
+        StopAllCoroutines();
+        Application.backgroundLoadingPriority = ThreadPriority.Low;
     }
 }

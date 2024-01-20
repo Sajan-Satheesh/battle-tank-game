@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25f1eb5cc4e2603488810419edecb1ed, type: 3}
   m_Name: Red Bullet
   m_EditorClassIdentifier: 
-  speed: 10
+  speed: 8
   bulletView: {fileID: 6976257189566663494, guid: 59ec8ebb40c7f7c489ed257333420af6,
     type: 3}

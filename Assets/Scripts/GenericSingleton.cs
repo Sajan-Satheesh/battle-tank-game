@@ -16,7 +16,7 @@ public class GenericSingleton<T> : MonoBehaviour where T : GenericSingleton<T>
         else
         {
             instance = (T)this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
     }
     protected virtual void Start()

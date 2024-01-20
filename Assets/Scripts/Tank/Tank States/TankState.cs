@@ -8,28 +8,29 @@ public class TankState
 {
     protected EnemyTankController tankController;
     protected TankStates tankState;
+    protected bool isUpdated = false;
     public TankState(EnemyTankController _tankController)
     {
         tankController= _tankController;
     }
-    public virtual void onStateEnter()
+    public virtual void OnStateEnter()
+    {
+        isUpdated= true;
+    }
+
+    public virtual void OnTick()
+    {
+        if(!isUpdated) { return; }
+    }
+
+    public virtual void OnCollision()
     {
 
     }
 
-    public virtual void onTick()
+    public virtual void OnStateExit()
     {
-
-    }
-
-    public virtual void onCollision()
-    {
-
-    }
-
-    public virtual void onStateExit()
-    {
-
+        isUpdated= false;
     }
 
     ~TankState()

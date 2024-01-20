@@ -4,22 +4,20 @@ using UnityEngine;
 [RequireComponent(typeof(TankView))]
 public class StateIdle : TankState
 {
-    private TankState nextTankState;
     public StateIdle(EnemyTankController _tankController) : base(_tankController)
     {
         tankState = TankStates.idle;
     }
 
-    public override void onStateEnter()
+    public override void OnStateEnter()
     {
-        base.onStateEnter();
+        base.OnStateEnter();
         
     }
 
-    public override void onStateExit()
+    public override void OnStateExit()
     {
-        base.onStateExit();
-        tankController.changeState(nextTankState);
+        base.OnStateExit();
     }
 
     /*private async Task<bool> IdleForSeconds()
@@ -46,21 +44,19 @@ public class StateIdle : TankState
     
 
 
-    public override void onTick()
+    public override void OnTick()
     {
-        base.onTick();
-        tankController.shiftDirectionSlow();
-        float reqDistance = tankController.distanceBtwPlayer();
+        base.OnTick();
+        tankController.ShiftDirectionSlow();
+        float reqDistance = tankController.DistanceBtwPlayer();
 
         if (reqDistance > 10)
         {
-            nextTankState = new StatePatrolling(tankController);
-            onStateExit();
+            tankController.ChangeState(new StatePatrolling(tankController));
         }
         else if(reqDistance <= 10)
         {
-            nextTankState = new StateChase(tankController);
-            onStateExit();
+            tankController.ChangeState(new StateChase(tankController));
         }
         
     }

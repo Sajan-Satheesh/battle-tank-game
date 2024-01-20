@@ -5,11 +5,13 @@ public class BulletModel : IgetController
 {
     private BulletController bulletController;
     public int speed;
+    public BulletType bulletType;
     public TransformSet bulletTransform;
     public bool fired = false;
-    public BulletModel(int _speed, TransformSet _bulletTransform)
+    public BulletModel(BulletType _bulletType, TransformSet _bulletTransform)
     {
-        speed = _speed;
+        bulletType = _bulletType;
+        speed = bulletType.speed;
         bulletTransform = _bulletTransform;
     }
 

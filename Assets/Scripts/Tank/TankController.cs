@@ -15,7 +15,7 @@ public class TankController
     public TankController(TankModel _tankModel, TankView _prefabTankView)
     {
         tankModel = _tankModel;
-        tankView = GameObject.Instantiate<TankView>(_prefabTankView,getRandPosInWorld(),Quaternion.identity);
+        tankView = GameObject.Instantiate<TankView>(_prefabTankView,GetRandPosInWorld(),Quaternion.identity);
         tankModel.getTankController(this);
         tankView.getTankController(this);
     }
@@ -25,11 +25,9 @@ public class TankController
         return tankModel;
     }
 
-    
-
-    private Vector3 getRandPosInWorld()
+    private Vector3 GetRandPosInWorld()
     {
-        return new Vector3(Random.Range(0, 30), 1f, Random.Range(0, 30));
+        return new Vector3(Random.Range(0, 50), 1f, Random.Range(0, 50));
     }
 
     public virtual void UpdateTank()
@@ -40,11 +38,12 @@ public class TankController
     {
 
     }
-    public virtual void onBulletHit()
+    public virtual void OnBulletHit()
     {
         tankModel.health -= 20;
-        if (tankModel.health < 0)
+        if (tankModel.health < 0 && !tankModel.died)
         {
+            tankView.GetComponent<Collider>().isTrigger = true;
             DestroyTank();
         }
     }
@@ -54,12 +53,12 @@ public class TankController
         tankModel.died = true;
         if(tankView!= null)
         {
-            tankView.startDestroyCoroutine(0.2f);
+            tankView.StartDestroyCoroutine(0.2f);
         }
         
     }
 
-    public void destroyTankDatas()
+    public void DestroyTankDatas()
     {
         tankModel = null;
     }
@@ -67,27 +66,10 @@ public class TankController
     public void Fire()
     {
         Vector3 bulletPosition = tankModel.shootertransform.position;
-        Quaternion bulletRotation = tankModel.shootertransform.transform.rotation;
+        Quaternion bulletRotation = tankModel.shootertransform.rotation;
         TransformSet reqBulletTransform = new TransformSet(bulletPosition, bulletRotation, tankView.tankRb.velocity);
-
         TankService.Instance.ServiceLaunchBullet(tankModel.bulletType, reqBulletTransform);
     }
-
-    public void fireAfterCooldown()
-    {
-        tankView.fireCoroutine(1f,tankModel.firing);
-    }
-
-    public void toggleAutoFiring()
-    {
-        tankModel.firing = !tankModel.firing;
-    }
-
-    public void stopFiring()
-    {
-        tankView.StopFiring();
-    }
-
     
 }
 

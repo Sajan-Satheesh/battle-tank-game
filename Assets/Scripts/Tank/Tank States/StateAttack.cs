@@ -1,36 +1,30 @@
 ﻿class StateAttack : TankState
 {
-    private TankState nextTankState;
     public StateAttack(EnemyTankController _tankController) : base(_tankController)
     {
         tankState = TankStates.attack;
     }
 
-    public override void onStateEnter()
+    public override void OnStateEnter()
     {
-        base.onStateEnter();
-        tankController.toggleAutoFiring();
-        tankController.fireAfterCooldown();
+        tankController.FireAfterCooldown();
+        base.OnStateEnter();
     }
 
-    public override void onStateExit()
+    public override void OnStateExit()
     {
-        base.onStateExit();
-        tankController.toggleAutoFiring();
-        tankController.stopFiring();
-        tankController.changeState(nextTankState);
+        base.OnStateExit();
+        tankController.StopFiring();
     }
 
-    public override void onTick()
+    public override void OnTick()
     {
-        base.onTick();
-        tankController.lookAtPlayer();
+        base.OnTick();
+        tankController.LookAtPlayer();
         
-        float reqDistance = tankController.distanceBtwPlayer();
-        if (reqDistance > 5)
+        if (tankController.DistanceBtwPlayer() > tankController.GetRange())
         {
-            nextTankState = new StateChase(tankController);
-            onStateExit();
+            tankController.ChangeState(new StateChase(tankController));
         }
     }
 }

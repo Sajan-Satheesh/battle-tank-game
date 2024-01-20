@@ -8,21 +8,27 @@ using Random = UnityEngine.Random;
 public class TankService : GenericSingleton<TankService> 
 {
     private TankType playerTank;
-    [SerializeField] private List<TankType> EnemyTanks = new List<TankType>();
-    [SerializeField] int enemyTankCount;
+    [SerializeField] int EnemyTankSpawnCount;
+    string enemyCount_PP = "enemyCount";
     [SerializeField] LevelManager levelManager;
-    [SerializeField] private List<EnemyTankController> EnemyTanksControllers = new List<EnemyTankController>();
+    public List<EnemyTankController> EnemyTanksControllers { get; private set; } = new List<EnemyTankController>();
     [SerializeField] private TankTypes tanks;
     public Coroutine destroyAll;
-    public int destroyedEnemyTanks = 0;
+    public int destroyedEnemyTanks { private get; set; } = 0;
 
     public Follower playerTankFollower;
     public PlayerTankController playerTankController;
+    public Action onLevelCleared;
 
     public event Action<int> distanceMilestoneCover;
-    public event Action<int> killCounter;
-    public event Action gameOver;
+    public event Action<int> onKilled;
+    public event Action onGameOver;
     protected override void Start()
+    {
+        StartGame();
+    }
+
+    private void OnLevelWasLoaded(int level)
     {
         StartGame();
     }
@@ -30,13 +36,21 @@ public class TankService : GenericSingleton<TankService>
     //public TankView getPlayerTankView() => playerTank.tankview;
     void StartGame()
     {
+        if (playerTankController != null) return;
         playerTankController = CreatePlayerTank();
+
+        EnemyTankSpawnCount = (int)PlayerPrefs.GetFloat(enemyCount_PP);
         CreateEnemyTanks();
     }
 
     public void ServiceLaunchBullet(BulletType _bulletTyoe, TransformSet _launch)
     {
         BulletService.Instance.FireBullet(_bulletTyoe, _launch);
+    }
+
+    Vector3 getBulletSpeed()
+    {
+        return Vector3.zero;
     }
 
     public void destroyAllTanks()
@@ -47,11 +61,11 @@ public class TankService : GenericSingleton<TankService>
 
     private IEnumerator destroyAllEnemies()
     {
-        foreach (TankController tank in EnemyTanksControllers)
+        foreach (EnemyTankController tank in EnemyTanksControllers)
         {
             if (tank != null)
             {
-                tank.DestroyTank();
+                tank?.DestroyTank();
                 yield return tank.tankView.destroyThis;
             }
             else
@@ -61,7 +75,6 @@ public class TankService : GenericSingleton<TankService>
             
         }
         EnemyTanksControllers.Clear();
-        EnemyTanks.Clear();
     }
 
     private TankType chooseRandomTank()
@@ -80,11 +93,11 @@ public class TankService : GenericSingleton<TankService>
     {
         //EnemyTanks.Clear();
         //EnemyTanksControllers.Clear();
-        for (int i = 0; i < enemyTankCount; i++)
+        for (int i = 0; i < EnemyTankSpawnCount; i++)
         {
-            EnemyTanks.Add(chooseRandomTank());
-            TankModel tankModel = new TankModel(EnemyTanks[i].speed, EnemyTanks[i].health, EnemyTanks[i].bulletType);
-            EnemyTankController tankController = new EnemyTankController(tankModel, EnemyTanks[i].tankview);
+            TankType randomTankType = chooseRandomTank();
+            TankModel tankModel = new TankModel(randomTankType.speed, randomTankType.health, randomTankType.bulletType);
+            EnemyTankController tankController = new EnemyTankController(tankModel, randomTankType.tankview);
             EnemyTanksControllers.Add(tankController);
         }
     }
@@ -96,12 +109,12 @@ public class TankService : GenericSingleton<TankService>
 
     public void killIncrementer()
     {
-        destroyedEnemyTanks++;
-        killCounter?.Invoke(destroyedEnemyTanks);
+        destroyedEnemyTanks+=1;
+        onKilled?.Invoke(destroyedEnemyTanks);
     }
 
     public void gameOverProcess()
     {
-        gameOver?.Invoke();
+        onGameOver?.Invoke();
     }
 }

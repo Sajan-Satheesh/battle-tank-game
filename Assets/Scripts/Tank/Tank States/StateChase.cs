@@ -6,44 +6,40 @@ using UnityEngine;
 [Serializable]
 public class StateChase : TankState
 {
-    private TankState nextTankState;
     public StateChase(EnemyTankController _tankController) : base(_tankController)
     {
         tankState = TankStates.chase;
     }
 
-    public override void onStateEnter()
+    public override void OnStateEnter()
     {
-        base.onStateEnter();
+        base.OnStateEnter();
     }
 
-    public override void onTick()
+    public override void OnTick()
     {
-        base.onTick();
-        tankController.lookAtPlayer();
-        tankController.moveForward();
-        float reqDistance = tankController.distanceBtwPlayer();
+        base.OnTick();
+        tankController.LookAtPlayer();
+        tankController.MoveForward();
+        float reqDistance = tankController.DistanceBtwPlayer();
+        if (reqDistance <= tankController.GetRange())
+        {
+            tankController.ChangeState(new StateAttack(tankController));
+        }
         if (reqDistance > 10)
         {
-            nextTankState = new StatePatrolling(tankController);
-            onStateExit();
-        }
-        if (reqDistance <= 5)
-        {
-            nextTankState = new StateAttack(tankController);
-            onStateExit();
+            tankController.ChangeState(new StatePatrolling(tankController));
         }
     }
 
-    public override void onCollision()
+    public override void OnCollision()
     {
 
     }
 
-    public override void onStateExit()
+    public override void OnStateExit()
     {
-        base.onStateExit();
-        tankController.changeState(nextTankState);
+        base.OnStateExit();
     }
 
 }

@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25f1eb5cc4e2603488810419edecb1ed, type: 3}
   m_Name: Type 1
   m_EditorClassIdentifier: 
-  speed: 6
+  speed: 12
   bulletView: {fileID: 6976257189566663494, guid: ccc128269e99f4e4f8480d46bfdab8fd,
     type: 3}
