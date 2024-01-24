@@ -6,38 +6,43 @@ using System.Linq;
 using UnityEngine;
 
 [Serializable]
-public class ObjectPoolSingleton<T> : GenericSingleton<ObjectPoolSingleton<T>> where T: class
+public abstract class ObjectPoolSingleton<C,T,P> where C: class
 {
-    [SerializeField] protected List<T> availableItems = new List<T>();
-    [SerializeField] protected List<T> inUseItems = new List<T>();
+    [field : SerializeField] protected List<C> availableItems = new List<C>();
+    [field : SerializeField] protected List<C> inUseItems = new List<C>();
 
     #region public functions
-    public virtual T getItem()
+    public C GetItem(T type, P position)
     {
-        T item = (T)null;
-        if (availableItems.Count < 1)
-        {
-            item = makeItem();
-        }
-        else
-        {
-            item = availableItems.Last();
-            availableItems.Remove(item);
-        }
+        if (availableItems == null) return null;
+        C item =  GetLogic(type ,position);
+        return GetItem(ref item);
+    }
+    public C GetItem(P position)
+    {
+        if (availableItems == null) return null;
+        C item = GetLogic(position);
+        return GetItem(ref item);
+    }
+        
+    private C GetItem(ref C item)
+    {
+        availableItems.Remove(item);
         inUseItems.Add(item);
         return item;
     }
 
 
-    public void retrieveItem( T _retreivedItem)
+    public void RetrieveItem( C _retreivedItem)
     {
         Debug.Log("reteriving bullet");
-        foreach (T item in inUseItems)
+        foreach (C item in inUseItems)
         {
             Debug.Log("count in used itesm: " + inUseItems.Count);
             if (item.Equals(_retreivedItem))
             {
                 Debug.Log("bullet returned");
+                RetreiveLogic(item);
                 availableItems.Add(item);
                 inUseItems.Remove(item);
                 break;
@@ -48,17 +53,12 @@ public class ObjectPoolSingleton<T> : GenericSingleton<ObjectPoolSingleton<T>> w
     #endregion
 
     #region protected functions
-    protected virtual T makeItem()
-    {
-        T availableItem = (T)null;
-        return availableItem;
-    } 
+    protected virtual C makeItem(T type, P position) { return null; }
+    protected virtual C makeItem(P position) { return null; }
+
+    protected abstract void RetreiveLogic(C _retreivedItem);
+    protected virtual C GetLogic(T type, P position) { return null; }
+    protected virtual C GetLogic(P position) { return null; }
     #endregion
 
-
-    protected class ObjectInfo 
-    {
-        public T item;
-        public bool isUsed;
-    }
 }

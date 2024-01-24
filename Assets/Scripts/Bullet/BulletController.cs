@@ -10,7 +10,7 @@ public class BulletController
     {
         bulletModel= _bulletModel;
         bulletModel.getBulletController(this);
-        bulletView = GameObject.Instantiate<BulletView>(_bulletView,_bulletModel.bulletTransform.position, bulletModel.bulletTransform.rotation);
+        bulletView = GameObject.Instantiate<BulletView>(_bulletView,_bulletModel.bulletTransform.position, bulletModel.bulletTransform.rotation,BulletService.Instance.transform);
         bulletView.getBulletController(this);
         onFire(_bulletModel.bulletTransform);
     }
@@ -21,11 +21,8 @@ public class BulletController
     }
     public void onHit()
     {
+        bulletModel.isFired = false;
         BulletService.Instance.returnBullet( this);
-        bulletView.gameObject.SetActive(false);
-        bulletView.bulletRb.velocity= Vector3.zero;
-        bulletView.gameObject.transform.position = Vector3.zero;
-        bulletModel.fired = false;
     }
     private void prepareBullet(TransformSet _bulletTransform)
     {
@@ -33,7 +30,7 @@ public class BulletController
         bulletModel.bulletTransform = _bulletTransform;
         bulletView.transform.position = bulletModel.bulletTransform.position;
         bulletView.transform.rotation = bulletModel.bulletTransform.rotation;
-        bulletModel.fired = true;
+        bulletModel.isFired = true;
         bulletView.gameObject.SetActive(true);
     }
     private void exertForce(Vector3 shooterVelocity)

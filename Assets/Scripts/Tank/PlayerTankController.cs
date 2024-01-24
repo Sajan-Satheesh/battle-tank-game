@@ -37,6 +37,10 @@ public class PlayerTankController: TankController
         messageAtDistanceMilestones();
     }
 
+    public Vector3 GetPositionAtElevation(float y)
+    {
+        return new Vector3(tankView.transform.position.x, y, tankView.transform.position.z);
+    }
 
     private void messageAtDistanceMilestones()
     {

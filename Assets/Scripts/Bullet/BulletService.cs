@@ -5,17 +5,14 @@ using UnityEngine;
 
 public class BulletService : GenericSingleton<BulletService> 
 {
-    Queue<BulletController> bulletControllers = new Queue<BulletController>();
     BulletPool bulletPool;
-    public TankController tc;
-
-    public event Action<int> bulletfire;
+    public Action<int> bulletfire;
     private int bulletsFired = 0;
 
     protected override void Awake()
     {
         base.Awake();
-        bulletPool= GetComponent<BulletPool>();
+        bulletPool = new BulletPool();
     }
     public void FireBullet(BulletType bulletType, TransformSet bulletTransform)
     {
@@ -26,7 +23,7 @@ public class BulletService : GenericSingleton<BulletService>
 
     public void returnBullet( BulletController bullet)
     {
-        bulletPool.retrieveItem( bullet);
+        bulletPool.RetrieveItem( bullet);
     }
     public BulletController createBullet(BulletType _bulletType, TransformSet _bulletTransform)
     {

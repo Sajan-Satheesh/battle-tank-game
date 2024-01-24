@@ -81,10 +81,10 @@ public class EnemyTankController : TankController
 
     public void LookAtPlayer()
     {
-        TankController player = TankService.Instance.playerTankController;
+        PlayerTankController player = TankService.Instance.playerTankController;
         if (player != null)
         {
-            tankView.gameObject.transform.LookAt(player.tankView.gameObject.transform.position);
+            tankView.gameObject.transform.LookAt(player.GetPositionAtElevation(tankView.transform.position.y));
         }
     }
 

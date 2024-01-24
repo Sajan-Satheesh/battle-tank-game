@@ -5,40 +5,34 @@ using System.Linq;
 using UnityEngine;
 
 [Serializable]
-public class BulletPool : ObjectPoolSingleton<BulletController>
+public class BulletPool : ObjectPoolSingleton<BulletController,BulletType,TransformSet>
 {
-    BulletType bulletType;
-    TransformSet bulletTransform;
-    [SerializeField] private List<BulletController> bulletControllers = new List<BulletController>();
-
-    public override BulletController getItem()
+    public BulletController createBullet(BulletType bulletType, TransformSet bulletTransform)
     {
-        foreach(BulletController bullet in availableItems)
+        return GetItem(bulletType, bulletTransform);
+    }
+
+    protected override BulletController GetLogic(BulletType bulletType, TransformSet position)
+    {
+        foreach (BulletController bullet in availableItems)
         {
-            if(bullet.bulletModel.bulletType == bulletType)
+            if (bullet.bulletModel.bulletType == bulletType)
             {
-                bullet.bulletView.gameObject.SetActive(true);
                 return bullet;
             }
         }
-        return makeItem();
+        return makeItem(bulletType, position);
     }
-
-    public BulletController createBullet(BulletType bulletType, TransformSet bulletTransform)
+    protected override void RetreiveLogic(BulletController _retreivedItem)
     {
-        this.bulletType = bulletType;
-        this.bulletTransform = bulletTransform;
-        return getItem();
+        _retreivedItem.bulletView.gameObject.SetActive(false);
+        _retreivedItem.bulletView.bulletRb.velocity = Vector3.zero;
+        _retreivedItem.bulletView.gameObject.transform.position = Vector3.zero;
     }
 
-    protected override BulletController makeItem()
+    protected override BulletController makeItem(BulletType bulletType, TransformSet bulletTransform)
     {
         return BulletService.Instance.createBullet(bulletType, bulletTransform);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        bulletControllers = inUseItems;
-    }
 }

@@ -7,7 +7,7 @@ public class BulletModel : IgetController
     public int speed;
     public BulletType bulletType;
     public TransformSet bulletTransform;
-    public bool fired = false;
+    public bool isFired = false;
     public BulletModel(BulletType _bulletType, TransformSet _bulletTransform)
     {
         bulletType = _bulletType;

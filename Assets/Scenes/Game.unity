@@ -124,6 +124,52 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &126663004
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 126663005}
+  - component: {fileID: 126663006}
+  m_Layer: 0
+  m_Name: Vfx Service
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &126663005
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 126663004}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 947244445}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &126663006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 126663004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2571079ab1fcb4408ebea27685fa435, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  explosionBase: {fileID: 195792, guid: 89e78efe92dfe5a42837b392cdb0bf9e, type: 3}
+  tankExplosionBase: {fileID: 151086, guid: ee49a9a8678ecf8468eb488e1ac8d42b, type: 3}
 --- !u!1 &145812286
 GameObject:
   m_ObjectHideFlags: 0
@@ -368,7 +414,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a3b1c63c154a60449ea24ccf7f826e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EnemyTankSpawnCount: 2
+  EnemyTankSpawnCount: 0
   levelManager: {fileID: 1345752252}
   tanks: {fileID: 11400000, guid: 3a9b3f681f7162842b4fc062e959df50, type: 2}
   playerTankFollower: {fileID: 1771596988}
@@ -823,7 +869,6 @@ GameObject:
   m_Component:
   - component: {fileID: 431470992}
   - component: {fileID: 431470991}
-  - component: {fileID: 431470993}
   m_Layer: 0
   m_Name: Bullets Service
   m_TagString: Untagged
@@ -858,18 +903,6 @@ Transform:
   m_Father: {fileID: 947244445}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &431470993
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 431470990}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f89e66e5edd591949a8b6b52a5782ec4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &436731304
 GameObject:
   m_ObjectHideFlags: 0
@@ -2224,6 +2257,7 @@ Transform:
   - {fileID: 1623788480}
   - {fileID: 431470992}
   - {fileID: 170027365}
+  - {fileID: 126663005}
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

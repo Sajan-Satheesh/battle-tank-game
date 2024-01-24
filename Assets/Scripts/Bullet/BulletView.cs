@@ -24,6 +24,12 @@ public class BulletView : MonoBehaviour, IgetController
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (!bulletController.bulletModel.isFired) return;
+        if(collision.gameObject.TryGetComponent(out TankView tankView))
+        {
+            VfxService.Instance.tankExplosionPool.GetExplosion(transform.position);
+        }
+        else VfxService.Instance.groundExplosionPool.GetExplosion(transform.position);
         bulletController.onHit();
     }
 

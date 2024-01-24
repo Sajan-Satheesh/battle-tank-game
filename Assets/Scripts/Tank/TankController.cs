@@ -15,7 +15,7 @@ public class TankController
     public TankController(TankModel _tankModel, TankView _prefabTankView)
     {
         tankModel = _tankModel;
-        tankView = GameObject.Instantiate<TankView>(_prefabTankView,GetRandPosInWorld(),Quaternion.identity);
+        tankView = GameObject.Instantiate<TankView>(_prefabTankView,GetRandPosInWorld(),Quaternion.identity, TankService.Instance.transform);
         tankModel.getTankController(this);
         tankView.getTankController(this);
     }
